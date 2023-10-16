@@ -9,7 +9,7 @@ import (
 
 func main() {
 	log.Print("starting server 123...")
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", Handler)
 
 	// Determine port for HTTP service.
 	port := os.Getenv("PORT")
@@ -25,7 +25,7 @@ func main() {
 	}
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	name := os.Getenv("NAME")
 	if name == "" {
 		name = "World"
