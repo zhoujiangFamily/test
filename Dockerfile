@@ -29,7 +29,7 @@ ADD . /$SERVICE
 RUN chmod u+x /$SERVICE/run.sh
 RUN chmod u+x /$SERVICE/$SERVICE
 RUN mkdir -p /var/log/go_log
-EXPOSE 8080
+
 # Copy local code to the container image.
 # COPY . ./
 
@@ -37,6 +37,6 @@ EXPOSE 8080
 #COPY --from=builder /app/server /app/server
 
 # Copy any certificates IF present.
-#COPY ./certs /app/certs
+# COPY ./certs /app/certs
 # Run the web service on container startup.
-CMD ["/app/server/run.sh"]
+CMD ["/first-test/run.sh"]
