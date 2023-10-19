@@ -3,7 +3,7 @@ package service
 import (
 	"database/sql"
 	"fmt"
-	"git.in.codoon.com/Overseas/runbox/first-test/cloudsql"
+	"git.in.codoon.com/Overseas/runbox/first-test/conf"
 	"html/template"
 	"log"
 	"math"
@@ -23,9 +23,9 @@ var (
 func Votes(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		renderIndex(w, r, cloudsql.GetDB())
+		renderIndex(w, r, conf.Fb_mysql)
 	case http.MethodPost:
-		saveVote(w, r, cloudsql.GetDB())
+		saveVote(w, r, conf.Fb_mysql)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -34,9 +34,9 @@ func Votes(w http.ResponseWriter, r *http.Request) {
 func Gps(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		renderIndex(w, r, cloudsql.GetDB())
+		renderIndex(w, r, conf.Fb_mysql)
 	case http.MethodPost:
-		saveVote(w, r, cloudsql.GetDB())
+		saveVote(w, r, conf.Fb_mysql)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
