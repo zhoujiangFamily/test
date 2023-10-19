@@ -51,8 +51,6 @@ func midHandler(next http.Handler) http.Handler {
 		token := r.Header.Get(TOKEN_ID)
 		user_id := r.Header.Get(UID)
 
-		user_id = "abcdas"
-
 		log.Printf("runboxServer Started[token:%s] ", token)
 		log.Printf("runboxServer Started[uid:%s] %s %s", user_id, r.Method, r.URL.Path)
 
