@@ -22,8 +22,8 @@ func initializeAppWithServiceAccount() *firebase.App {
 
 func InitializeAppWithRefreshToken() *firebase.App {
 	// [START initialize_app_refresh_token_golang]
-	opt := option.WithCredentialsFile("path/to/refreshToken.json")
-	config := &firebase.Config{ProjectID: "my-project-id"}
+	opt := option.WithCredentialsFile("/first-test/token.json")
+	config := &firebase.Config{ProjectID: "runbox-9f6da"}
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)

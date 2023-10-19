@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	firebase "firebase.google.com/go/v4"
 	"git.in.codoon.com/Overseas/runbox/first-test/cloudsql"
+	"git.in.codoon.com/Overseas/runbox/first-test/firebase_conf"
 )
 
 var Firebaer_app *firebase.App
@@ -15,8 +16,8 @@ func InitBase() {
 	db := cloudsql.GetDB()
 	Fb_mysql = db
 	//初始化firebaseAPP
-	/*	app := firebase_conf.InitializeAppWithRefreshToken()
+	app := firebase_conf.InitializeAppWithRefreshToken()
 
-		Firebaer_app = app*/
+	Firebaer_app = app
 
 }
