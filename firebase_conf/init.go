@@ -39,7 +39,7 @@ func InitializeAppWithRefreshToken() *firebase.App {
 	dir, _ := os.Getwd()
 
 	ListDir(dir)
-	opt := option.WithCredentialsFile("first-test/token.json")
+	opt := option.WithCredentialsFile(dir + "/token.json")
 	config := &firebase.Config{ProjectID: "runbox-9f6da"}
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
