@@ -31,6 +31,7 @@ RUN chmod u+x /$SERVICE/$SERVICE
 RUN mkdir -p /var/log/go_log
 EXPOSE 8080
 
+
 # Copy local code to the container image.
 # COPY . ./
 
