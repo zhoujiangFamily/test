@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test', '.']
+    env:
+      - 'DB_NAME=sql'
+      - 'DB_PASS=sql'
+    dir: 'app'
+    # Docker Push
+    - name: 'gcr.io/cloud-builders/docker'
+     args: [ 'push','us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test' ]
+  images: ['us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test']
