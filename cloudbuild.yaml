@@ -1,10 +1,15 @@
 steps:
+  # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test', '.']
+    args: ['build', '-t',
+           'us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test',
+           '.']
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push',
+           'us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test']
     env:
-      - 'DB_NAME=sql'
-      - 'DB_PASS=sql'
-    dir: 'app'
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push','us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test' ]
-  images: ['us-central1-docker.pkg.dev/runboxtest/runbox-repositories/gps-test']
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+# [END cloudbuild_basic_config]
