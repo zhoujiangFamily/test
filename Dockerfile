@@ -21,7 +21,8 @@ ENV SERVICE first-test
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
 # Expecting to copy go.mod and if present go.sum.
-COPY go.* ./
+RUN mkdir /$SERVICE
+RUN mkdir /$SERVICE/$SERVICE
 #RUN go mod download
 #RUN go build
 ADD . /$SERVICE
@@ -30,7 +31,7 @@ RUN chmod u+x /$SERVICE/$SERVICE
 RUN mkdir -p /var/log/go_log
 
 # Copy local code to the container image.
-COPY . ./
+# COPY . ./
 
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /app/server /app/server
