@@ -26,8 +26,8 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	dir, _ := os.Getwd()
-	log.Printf("runboxServer Listening on port %s worrdir: %s", port, dir)
+
+	log.Printf("runboxServer Listening on port %s ", port)
 
 	//serverName := "runboxServer"
 	conf.InitBase()

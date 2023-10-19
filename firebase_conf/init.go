@@ -6,6 +6,7 @@ import (
 	"firebase.google.com/go/v4/auth"
 	"google.golang.org/api/option"
 	"log"
+	"os"
 )
 
 func initializeAppWithServiceAccount() *firebase.App {
@@ -22,7 +23,8 @@ func initializeAppWithServiceAccount() *firebase.App {
 
 func InitializeAppWithRefreshToken() *firebase.App {
 	// [START initialize_app_refresh_token_golang]
-	opt := option.WithCredentialsFile("/first-test/token.json")
+	dir, _ := os.Getwd()
+	opt := option.WithCredentialsFile(dir + "/first-test/token.json")
 	config := &firebase.Config{ProjectID: "runbox-9f6da"}
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
