@@ -34,9 +34,9 @@ func Votes(w http.ResponseWriter, r *http.Request) {
 func Gps(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		renderIndex(w, r, conf.Fb_mysql)
+		gpsget(w, r, conf.Fb_mysql)
 	case http.MethodPost:
-		saveVote(w, r, conf.Fb_mysql)
+		gpsPost(w, r, conf.Fb_mysql)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -270,3 +270,13 @@ var indexHTML = `
 </body>
 </html>
 `
+
+func gpsget(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	fmt.Fprintf(w, "hello Go Web get")
+}
+
+func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	fmt.Fprintf(w, "hello Go Web Post")
+}

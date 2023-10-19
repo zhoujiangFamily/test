@@ -15,7 +15,7 @@ func InitBase() {
 	db := cloudsql.GetDB()
 	Fb_mysql = db
 	//初始化firebaseAPP
-	/*	app:= firebase_conf.InitializeAppWithRefreshToken()
+	/*	app := firebase_conf.InitializeAppWithRefreshToken()
 
 		Firebaer_app = app*/
 

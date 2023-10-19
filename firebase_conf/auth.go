@@ -106,6 +106,9 @@ func revokeRefreshTokens(ctx context.Context, app *firebase.App, uid string) {
 
 func VerifyIDTokenAndCheckRevoked(ctx context.Context, app *firebase.App, idToken string) *auth.Token {
 	// [START verify_id_token_and_check_revoked_golang]
+	if app == nil {
+		return nil
+	}
 	client, err := app.Auth(ctx)
 	if err != nil {
 		log.Fatalf("error getting Auth client: %v\n", err)
