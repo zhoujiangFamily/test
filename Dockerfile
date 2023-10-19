@@ -34,9 +34,9 @@ RUN mkdir -p /var/log/go_log
 # COPY . ./
 
 # Copy the binary to the production image from the builder stage.
-COPY --from=builder /app/server /app/server
+#COPY --from=builder /app/server /app/server
 
 # Copy any certificates IF present.
-COPY ./certs /app/certs
+#COPY ./certs /app/certs
 # Run the web service on container startup.
 CMD ["/app/server/run.sh"]
