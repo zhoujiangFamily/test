@@ -5,6 +5,7 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"google.golang.org/api/option"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -21,10 +22,24 @@ func initializeAppWithServiceAccount() *firebase.App {
 	return app
 }
 
+func ListDir(dirname string) ([]string, error) {
+	infos, err := ioutil.ReadDir(dirname)
+	if err != nil {
+		return nil, err
+	}
+	names := make([]string, len(infos))
+	for i, info := range infos {
+		names[i] = info.Name()
+		log.Printf("dirdir: %s ", info.Name())
+	}
+	return names, nil
+}
 func InitializeAppWithRefreshToken() *firebase.App {
 	// [START initialize_app_refresh_token_golang]
 	dir, _ := os.Getwd()
-	opt := option.WithCredentialsFile(dir + "/first-test/token.json")
+
+	ListDir(dir)
+	opt := option.WithCredentialsFile("first-test/token.json")
 	config := &firebase.Config{ProjectID: "runbox-9f6da"}
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
