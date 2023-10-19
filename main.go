@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
 	"git.in.codoon.com/Overseas/runbox/first-test/conf"
@@ -81,7 +82,7 @@ func midHandler(next http.Handler) http.Handler {
 }
 func checkToken(ID string) (err error, userId string) {
 	//ctx := context.WithValue(nil, "svc_name", "")
-	token := common.VerifyIDTokenFireBase(nil, ID)
+	token := common.VerifyIDTokenFireBase(context.Background(), ID)
 	if token == nil || token.UID == "" {
 		err = errors.New("token check failed")
 		return
