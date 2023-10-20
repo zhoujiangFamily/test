@@ -68,7 +68,7 @@ func midHandler(next http.Handler) http.Handler {
 			}
 		} else {
 			//token 校验失败
-			log.Printf("runboxServer check token failed ")
+			log.Printf("runboxServer check token failed err: %v ", err)
 			w.WriteHeader(HTTP_CODE_AUTH_TOKEN_FAILED)
 			http.Error(w, "check token failed ", HTTP_CODE_AUTH_TOKEN_FAILED)
 
