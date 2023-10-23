@@ -54,7 +54,7 @@ type Gps struct {
 
 func (g *Gps) Create() error {
 
-	insertStmt, err := conf.Fb_mysql.Prepare("INSERT INTO gps (route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+	insertStmt, err := conf.Fb_mysql.Prepare("INSERT INTO gps_route_data (route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		log.Printf("create gps Prepare error :%v", err)
 		return err
@@ -74,7 +74,7 @@ func (g *Gps) Create() error {
 
 func (g *Gps) Update() error {
 	fmt.Print("更新数据 ")
-	stmt, err := conf.Fb_mysql.Prepare("update userinfo set user_id=? where route_id=?")
+	stmt, err := conf.Fb_mysql.Prepare("update gps_route_data set user_id=? where route_id=?")
 	if err != nil {
 		log.Printf("Update Gps Prepare error :%v", err)
 		return err
@@ -97,7 +97,7 @@ func (g *Gps) Update() error {
 
 func (g *Gps) Select(routeId string) error {
 
-	insertStmt, err := conf.Fb_mysql.Prepare("select id,route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url from gps where route_id = :1")
+	insertStmt, err := conf.Fb_mysql.Prepare("select id,route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url from gps_route_data where route_id = :1")
 	if err != nil {
 		log.Printf("Select Gps select error :%v", err)
 	}

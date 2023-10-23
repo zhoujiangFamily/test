@@ -2,6 +2,7 @@ package cloudsql
 
 import (
 	"database/sql"
+	"git.in.codoon.com/Overseas/runbox/first-test/model"
 	"log"
 	"os"
 	"sync"
@@ -95,6 +96,11 @@ func mustConnect() *sql.DB {
 	}
 	if err := migrateGpsTable(db); err != nil {
 		log.Fatalf("unable to create table: %s", err)
+	}
+
+	log.Printf("create table,create table,create table")
+	if err := model.MigrateGpsRouteTable(db); err != nil {
+		log.Fatalf("MigrateGpsRouteTable to create table: %s", err)
 	}
 
 	return db
