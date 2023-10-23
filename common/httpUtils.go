@@ -59,6 +59,7 @@ func Bind(c *http.Request, obj interface{}) bool {
 }
 func BindWith(c *http.Request, obj interface{}, b Binding) bool {
 	if err := b.Bind(c, obj); err != nil {
+		log.Printf("xaxsa %v", err)
 		return false
 	}
 	return true
