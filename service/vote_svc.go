@@ -297,8 +297,8 @@ func TestGet(w http.ResponseWriter, r *http.Request) {
 	vfvf = append(vfvf, "dsfds")
 	vfvf = append(vfvf, "dsfds")
 	data := TestRsp{
-		UserId:  "dadas",
-		RouteId: "casdasdsfas",
+		UserId:  req.UserId,
+		RouteId: req.RouteId,
 		LL:      vfvf,
 		FF:      1,
 	}
@@ -318,8 +318,8 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 	vfvf = append(vfvf, "dsfds")
 	vfvf = append(vfvf, "dsfds")
 	data := TestRsp{
-		UserId:  "dadas",
-		RouteId: "casdasdsfas",
+		UserId:  req.UserId,
+		RouteId: req.RouteId,
 		LL:      vfvf,
 		FF:      1,
 	}
