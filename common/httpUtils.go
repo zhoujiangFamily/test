@@ -69,3 +69,9 @@ func filterFlags(content string) string {
 	}
 	return content
 }
+
+type CommonRsp struct {
+	Status string      `json:"status"`
+	Data   interface{} `json:"data"`
+	Desc   string      `json:"description"`
+}

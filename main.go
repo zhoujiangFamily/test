@@ -36,7 +36,7 @@ func main() {
 	router := http.NewServeMux()
 
 	router.Handle("/note", midHandler(http.HandlerFunc(service.Votes)))
-	router.Handle("/v1/gps", midHandler(http.HandlerFunc(service.Gps)))
+	//router.Handle("/v1/gps", midHandler(http.HandlerFunc(service.Gps)))
 	router.Handle("/v1/gpsss", http.HandlerFunc(service.Gps))
 	router.Handle("/v1/test", http.HandlerFunc(service.Test))
 
