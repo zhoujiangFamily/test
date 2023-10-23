@@ -54,7 +54,7 @@ func MigrateGpsRouteTable(db *sql.DB) error {
 		route_id VARCHAR(100) NOT NULL,
 		user_id  VARCHAR(100) NOT NULL,
 		total_length int NOT NULL,
-   		 total_time data NOT NULL,
+   		 total_time int NOT NULL,
         total_calories int NOT NULL,
         location VARCHAR(100)  NULL,
      sports_type int NOT NULL,
