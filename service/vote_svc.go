@@ -3,7 +3,9 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"git.in.codoon.com/Overseas/runbox/first-test/common"
 	"git.in.codoon.com/Overseas/runbox/first-test/conf"
+	"git.in.codoon.com/Overseas/runbox/first-test/model"
 	"html/template"
 	"log"
 	"math"
@@ -37,6 +39,17 @@ func Gps(w http.ResponseWriter, r *http.Request) {
 		gpsget(w, r, conf.Fb_mysql)
 	case http.MethodPost:
 		gpsPost(w, r, conf.Fb_mysql)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func Test(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		TestGet(w, r)
+	case http.MethodPost:
+		TestPost(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -271,12 +284,185 @@ var indexHTML = `
 </html>
 `
 
+func TestGet(w http.ResponseWriter, r *http.Request) {
+	req := &GetGpsReq{}
+	booll := common.Bind(r, req)
+
+	if !booll {
+		log.Printf("bing request failed parse form: %v ", r)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	vfvf := make([]string, 0)
+	vfvf = append(vfvf, "dsfds")
+	vfvf = append(vfvf, "dsfds")
+	data := TestRsp{
+		UserId:  "dadas",
+		RouteId: "casdasdsfas",
+		LL:      vfvf,
+		FF:      1,
+	}
+
+	common.Render(w, 200, data)
+}
+func TestPost(w http.ResponseWriter, r *http.Request) {
+	req := &GetGpsReq{}
+	booll := common.Bind(r, req)
+
+	if !booll {
+		log.Printf("bing request failed parse form: %v ", r)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	vfvf := make([]string, 0)
+	vfvf = append(vfvf, "dsfds")
+	vfvf = append(vfvf, "dsfds")
+	data := TestRsp{
+		UserId:  "dadas",
+		RouteId: "casdasdsfas",
+		LL:      vfvf,
+		FF:      1,
+	}
+
+	common.Render(w, 200, data)
+}
+
+//获取一条记录
 func gpsget(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	fmt.Fprintf(w, "hello Go Web get")
+	///
+	req := &GetGpsReq{}
+	booll := common.Bind(r, req)
+
+	if !booll {
+		log.Printf("bing request failed parse form: %v ", r)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	//根据route_id 和 获取路线
+
+	data := model.Gps{}
+	err := data.Select(req.RouteId)
+	if err != nil {
+		log.Printf("gpsGet: failed req : %v", req)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	//fmt.Fprintf(w, "hello Go Web get")
+	common.Render(w, 200, data)
+}
+
+//获取一条记录
+func GetGpsList(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	///
+	req := &GetGpsReq{}
+	booll := common.Bind(r, req)
+
+	if !booll {
+		log.Printf("bing request failed parse form: %v ", r)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	//根据route_id 和 获取路线
+
+	data := model.Gps{}
+	err := data.Select(req.RouteId)
+	if err != nil {
+		log.Printf("gpsGet: failed req : %v", req)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	//fmt.Fprintf(w, "hello Go Web get")
+	common.Render(w, 200, data)
 }
 
 func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	fmt.Fprintf(w, "hello Go Web Post")
+	if err := r.ParseForm(); err != nil {
+		log.Printf("gpsPost: failed to parse form: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	//
+	userId := common.GetUserId(r)
+
+	if userId == "" {
+		log.Printf("gpsPost: userId is empty ")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	gpsDto := &GpsDto{
+		UserId: userId,
+	}
+	booll := common.Bind(r, gpsDto)
+
+	if !booll {
+		log.Printf("bing request failed parse form: %v ", r)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	Upload_time := time.Now()
+	//
+	startTime, _ := time.ParseInLocation("2006-01-02 15:04:05", gpsDto.StartTime, time.Now().Location())
+	endTime, _ := time.ParseInLocation("2006-01-02 15:04:05", gpsDto.StartTime, time.Now().Location())
+
+	//转换数据
+
+	routeId := common.GetRandomRouteId()
+	gps := model.Gps{
+		UserId:        userId,
+		RouteId:       routeId,
+		AddToUserId:   gpsDto.AddToUserId,
+		Location:      gpsDto.Location,
+		SportsType:    gpsDto.SportsType,
+		StartTime:     startTime,
+		EndTime:       endTime,
+		TotalLength:   gpsDto.TotalLength,
+		TotalCalories: gpsDto.TotalCalories,
+		ProductId:     gpsDto.ProductId,
+
+		AveragePace:       gpsDto.AveragePace,
+		AverageSpeed:      gpsDto.AverageSpeed,
+		HighestSpeedPerkm: gpsDto.HighestSpeedPerkm,
+
+		PacePerM: gpsDto.PacePerM,
+
+		PacePerMile: gpsDto.PacePerMile,
+		TotalTime:   gpsDto.TotalTime,
+		Pause:       gpsDto.Pause,
+		Cadences:    gpsDto.Cadences,
+		Steps:       gpsDto.Steps,
+		HideMap:     gpsDto.HideMap,
+		HideKmCard:  gpsDto.HideKmCard,
+		LocusUrl:    gpsDto.LocusUrl,
+		LocusUrl2:   gpsDto.LocusUrl2,
+		IsHistory:   gpsDto.IsHistory,
+		GoalType:    gpsDto.GoalType,
+		GoalResult:  gpsDto.GoalResult,
+		GoalValue:   gpsDto.GoalValue,
+		HeartRate:   gpsDto.HeartRate,
+		SourceType:  gpsDto.SourceType,
+		Os:          gpsDto.Os,
+		AppVersion:  gpsDto.AppVersion,
+		PointNum:    gpsDto.PointNum,
+		StartPoint:  gpsDto.StartPoint,
+		EndPoint:    gpsDto.EndPoint,
+		UploadTime:  Upload_time,
+	}
+
+	//创建数据
+	err := gps.Create()
+
+	if err != nil {
+		log.Printf("gpsPost: failed to parse form: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	//fmt.Fprintf(w, "hello Go Web Post")
+	common.Render(w, 200, gps.RouteId)
 }

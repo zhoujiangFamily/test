@@ -36,7 +36,8 @@ func main() {
 	router := http.NewServeMux()
 
 	router.Handle("/note", midHandler(http.HandlerFunc(service.Votes)))
-	router.Handle("/gps", midHandler(http.HandlerFunc(service.Gps)))
+	router.Handle("/v1/gps", midHandler(http.HandlerFunc(service.Gps)))
+	router.Handle("/v1/test", midHandler(http.HandlerFunc(service.Test)))
 
 	if err := http.ListenAndServe(":"+port, router); err != nil {
 		log.Fatal(err)
