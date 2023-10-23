@@ -15,30 +15,22 @@
 # Use the offical golang image to create a binary.
 # This is based on Debian and sets the GOPATH to /go.
 # https://hub.docker.com/_/golang
-FROM golang:1.17-buster as builder
-ENV SERVICE first-test
+#FROM golang:1.17-buster as builder
+#ENV SERVICE first-test
 # Create and change to the app directory.
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
 # Expecting to copy go.mod and if present go.sum.
-RUN mkdir /$SERVICE
-RUN mkdir /$SERVICE/$SERVICE
+#RUN mkdir /$SERVICE
+#RUN mkdir /$SERVICE/$SERVICE
 #RUN go mod download
 #RUN go build
-ADD . /$SERVICE
-RUN chmod u+x /$SERVICE/run.sh
-RUN chmod u+x /$SERVICE/$SERVICE
-RUN mkdir -p /var/log/go_log
-EXPOSE 8080
+#ADD . /$SERVICE
+#RUN chmod u+x /$SERVICE/run.sh
+#RUN chmod u+x /$SERVICE/$SERVICE
+#RUN mkdir -p /var/log/go_log
+#EXPOSE 8080
 
 
-# Copy local code to the container image.
-# COPY . ./
 
-# Copy the binary to the production image from the builder stage.
-#COPY --from=builder /app/server /app/server
-
-# Copy any certificates IF present.
-# COPY ./certs /app/certs
-# Run the web service on container startup.
 CMD ["/first-test/run.sh"]
