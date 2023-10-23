@@ -310,7 +310,7 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 	booll := common.Bind(r, req)
 
 	if !booll {
-		log.Printf("bing request failed parse form: %v  xxx %v ", r.Body, r.Form)
+		log.Printf("bing request failed parse form: %v  xxx %v  xxxx2: %v", r.Body, r.Form, r.PostForm)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
