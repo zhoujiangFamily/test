@@ -306,6 +306,18 @@ func TestGet(w http.ResponseWriter, r *http.Request) {
 	common.Render(w, 200, data)
 }
 func TestPost(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		log.Printf("saveVote: failed to parse form: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	team := r.FormValue("route_id")
+	if team == "" {
+		log.Printf("saveVote: \"team\" property missing from form submission")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	req := &GetGpsReq{}
 	booll := common.Bind(r, req)
 
@@ -322,7 +334,7 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 	vfvf = append(vfvf, "dsfds")
 	data := TestRsp{
 		UserId:  req.UserId,
-		RouteId: req.RouteId,
+		RouteId: team,
 		LL:      vfvf,
 		FF:      1,
 	}
