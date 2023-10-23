@@ -314,6 +314,9 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+
+	log.Printf("bing request failed parse form: %v ", req)
+
 	vfvf := make([]string, 0)
 	vfvf = append(vfvf, "dsfds")
 	vfvf = append(vfvf, "dsfds")

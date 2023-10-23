@@ -40,19 +40,21 @@ func writeHeader(w http.ResponseWriter, code int, contentType string) {
 
 func Bind(c *http.Request, obj interface{}) bool {
 	var b Binding
-	ctype := filterFlags(c.Header.Get("Content-Type"))
-	switch {
-	case c.Method == "GET" || c.Method == "DELETE" || ctype == MIMEPOSTForm || ctype == MIMEPOSTForm2B:
-		b = Form
-	case ctype == MIMEMultipartPOSTForm:
-		b = MultipartForm
-	case ctype == MIMEJSON:
-		b = JSON
-	case ctype == MIMEXML || ctype == MIMEXML2:
-		b = XML
-	default:
-		return false
-	}
+	/*	ctype := filterFlags(c.Header.Get("Content-Type"))
+		switch {
+		case c.Method == "GET" || c.Method == "DELETE" || ctype == MIMEPOSTForm || ctype == MIMEPOSTForm2B:
+			b = Form
+		case ctype == MIMEMultipartPOSTForm:
+			b = MultipartForm
+		case ctype == MIMEJSON:
+			b = JSON
+		case ctype == MIMEXML || ctype == MIMEXML2:
+			b = XML
+		default:
+			log.Printf("Render failed parse form:  ")
+			return false
+		}*/
+	b = JSON
 	return BindWith(c, obj, b)
 }
 func BindWith(c *http.Request, obj interface{}, b Binding) bool {
