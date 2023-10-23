@@ -37,7 +37,8 @@ func main() {
 
 	router.Handle("/note", midHandler(http.HandlerFunc(service.Votes)))
 	router.Handle("/v1/gps", midHandler(http.HandlerFunc(service.Gps)))
-	router.Handle("/v1/test", midHandler(http.HandlerFunc(service.Test)))
+	router.Handle("/v1/gpsss", http.HandlerFunc(service.Gps))
+	router.Handle("/v1/test", http.HandlerFunc(service.Test))
 
 	if err := http.ListenAndServe(":"+port, router); err != nil {
 		log.Fatal(err)
