@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/xml"
+	"log"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -43,6 +44,7 @@ func (_ jsonBinding) Bind(req *http.Request, obj interface{}) error {
 	if err := decoder.Decode(obj); err == nil {
 		return Validate(obj)
 	} else {
+		log.Printf("errrrrrrrr %v", err)
 		return err
 	}
 }
