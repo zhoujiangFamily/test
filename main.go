@@ -74,11 +74,11 @@ func midHandler(next http.Handler) http.Handler {
 	return nil
 }
 func checkUser(w http.ResponseWriter, r *http.Request) error {
-	/*	rsp := http_util.CommonRsp{
+	rsp := http_util.CommonRsp{
 		Status: http_util.SUCCESS,
 		Code:   http_util.HTTP_CODE_SUCCESS,
 		Desc:   "",
-	}*/
+	}
 	token := r.Header.Get(TOKEN_ID)
 	user_id := r.Header.Get(UID)
 	err, uid := checkToken(token)
@@ -87,14 +87,18 @@ func checkUser(w http.ResponseWriter, r *http.Request) error {
 			log.Printf("runboxServer check uid failed ")
 			w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
 			http.Error(w, "check uid failed ", http_util.HTTP_CODE_AUTH_UID_FAILED)
+			rsp.Desc = "runboxServer check uid failed"
+			rsp.Status = http_util.FAILED
+			http_util.Render(w, 200, rsp)
 			return errors.New("user failed")
 		}
 	} else {
 		//token 校验失败
 		log.Printf("runboxServer check token failed err: %v ", err)
 		w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-		http.Error(w, "check token failed ", http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-
+		rsp.Desc = "check token failed"
+		rsp.Status = http_util.FAILED
+		http_util.Render(w, 200, rsp)
 		return errors.New("token failed")
 	} //校验token结束
 	return nil
