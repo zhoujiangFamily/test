@@ -7,8 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
-	"git.in.codoon.com/Overseas/runbox/first-test/conf"
-	"git.in.codoon.com/Overseas/runbox/first-test/http_util"
 	"git.in.codoon.com/Overseas/runbox/first-test/service"
 	"io"
 	"io/ioutil"
@@ -34,7 +32,7 @@ func main() {
 	log.Printf("runboxServer Listening on port %s ", port)
 
 	//serverName := "runboxServer"
-	conf.InitBase()
+	//conf.InitBase()
 
 	router := http.NewServeMux()
 
@@ -61,21 +59,21 @@ func midHandler(next http.Handler) http.Handler {
 
 		//校验token开始
 
-		err, uid := checkToken(token)
-		if err == nil && uid != "" {
-			if user_id != uid {
-				log.Printf("runboxServer check uid failed ")
+		/*	err, uid := checkToken(token)
+			if err == nil && uid != "" {
+				if user_id != uid {
+					log.Printf("runboxServer check uid failed ")
+					w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
+					http.Error(w, "check uid failed ", http_util.HTTP_CODE_AUTH_UID_FAILED)
+
+				}
+			} else {
+				//token 校验失败
+				log.Printf("runboxServer check token failed err: %v ", err)
 				w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-				http.Error(w, "check uid failed ", http_util.HTTP_CODE_AUTH_UID_FAILED)
+				http.Error(w, "check token failed ", http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
 
-			}
-		} else {
-			//token 校验失败
-			log.Printf("runboxServer check token failed err: %v ", err)
-			w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-			http.Error(w, "check token failed ", http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-
-		} //校验token结束
+			} //校验token结束*/
 
 		log.Printf("runboxServer Completed[uid:%s] %s in %v", user_id, r.URL.Path, time.Since(start))
 		//之后
