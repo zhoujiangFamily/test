@@ -35,7 +35,7 @@ const (
 
 const (
 	FAILED  = "failed"
-	SUCCESS = "success"
+	SUCCESS = "ok"
 )
 
 func RenderJson(w http.ResponseWriter, code int, data ...interface{}) error {
