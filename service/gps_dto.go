@@ -59,3 +59,10 @@ type TestRsp struct {
 	LL      []string `json:"ll"`
 	FF      int      `json:"ff"`
 }
+
+type PostGpsRspData struct {
+	RouteId  string      `json:"route_id"`
+	Medals   interface{} `json:"medals"`
+	Grade    int         `json:"grade"`
+	OldGrade int         `json:"old_grade"`
+}

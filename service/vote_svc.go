@@ -506,6 +506,9 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
-	rsp.Data = gps.RouteId
+	data1 := PostGpsRspData{
+		RouteId: routeId,
+	}
+	rsp.Data = data1
 	http_util.Render(w, 200, rsp)
 }
