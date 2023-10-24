@@ -5,7 +5,7 @@ import (
 )
 
 func GetUserId(r *http.Request) string {
-
-	return ""
+	user_id := r.Header.Get("uid")
+	return user_id
 
 }
