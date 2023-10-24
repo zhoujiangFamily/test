@@ -492,6 +492,7 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		StartPoint:  gpsDto.StartPoint,
 		EndPoint:    gpsDto.EndPoint,
 		UploadTime:  Upload_time,
+		FileUrl:     gpsDto.FileUrl,
 	}
 
 	//创建数据
