@@ -21,6 +21,7 @@ const (
 )
 
 const (
+	CODE_SUCCESS      = 0
 	HTTP_CODE_SUCCESS = 200
 
 	HTTP_CODE_PARAM_FAILE    = 601
@@ -94,6 +95,6 @@ func filterFlags(content string) string {
 type CommonRsp struct {
 	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
-	Desc   string      `json:"description"`
+	Desc   string      `json:"desc"`
 	Code   int         `json:"code"`
 }

@@ -76,7 +76,7 @@ func midHandler(next http.Handler) http.Handler {
 func checkUser(w http.ResponseWriter, r *http.Request) error {
 	rsp := http_util.CommonRsp{
 		Status: http_util.SUCCESS,
-		Code:   http_util.HTTP_CODE_SUCCESS,
+		Code:   http_util.CODE_SUCCESS,
 		Desc:   "",
 	}
 	token := r.Header.Get(TOKEN_ID)
