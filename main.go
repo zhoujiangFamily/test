@@ -60,7 +60,7 @@ func midHandler(next http.Handler) http.Handler {
 		log.Printf("runboxServer Started[uid:%s] %s %s", user_id, r.Method, r.URL.Path)
 
 		//校验token开始
-		checkUser(w, r)
+		//checkUser(w, r)
 		/*	if e1 != nil {
 			return
 		}*/
