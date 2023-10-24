@@ -427,6 +427,7 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		UserId: userId,
 	}
 	booll := http_util.Bind(r, gpsDto)
+	log.Printf("post data req: %v ", gpsDto)
 
 	if !booll {
 		log.Printf("bing request failed parse form: %v ", r)
