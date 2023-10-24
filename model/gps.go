@@ -100,11 +100,13 @@ func (g *Gps) Select(routeId string) error {
 	insertStmt, err := conf.Fb_mysql.Prepare("select id,route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url from gps_route_data where route_id = ?")
 	if err != nil {
 		log.Printf("Select Gps select error :%v", err)
+		return err
 	}
 	defer insertStmt.Close()
 	rows, err := insertStmt.Query(routeId)
 	if err != nil {
 		log.Printf("Select Gps select error :%v", err)
+		return err
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -127,10 +129,12 @@ func (g *Gps) Select(routeId string) error {
 
 		if err != nil {
 			log.Printf("Select Gps select error :%v", err)
+			return err
 		}
 	}
 	if err = rows.Err(); err != nil {
 		log.Printf("Select Gps select error :%v", err)
+		return err
 	}
 	return nil
 
