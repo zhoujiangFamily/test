@@ -85,6 +85,7 @@ func midHandler(next http.Handler) http.Handler {
 			log.Printf("read request body error:%v", err)
 			return
 		}
+		log.Printf(" user: %s , body : %s ", user_id, string(data))
 
 		var v map[string]interface{}
 		if len(data) == 0 {
