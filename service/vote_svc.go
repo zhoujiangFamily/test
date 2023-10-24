@@ -11,6 +11,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -440,8 +441,14 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	Upload_time := time.Now()
 	//
-	startTime, _ := time.ParseInLocation("2006-01-02 15:04:05", gpsDto.StartTime, time.Now().Location())
-	endTime, _ := time.ParseInLocation("2006-01-02 15:04:05", gpsDto.StartTime, time.Now().Location())
+	var startTime time.Time
+	var endTime time.Time
+	lay := "2006-01-02 15:04:05"
+	if strings.Contains(gpsDto.StartTime, "T") {
+		lay = "2006-01-02T15:04:05"
+	}
+	startTime, _ = time.ParseInLocation(lay, gpsDto.StartTime, time.Now().Location())
+	endTime, _ = time.ParseInLocation(lay, gpsDto.EndTime, time.Now().Location())
 
 	//转换数据
 
