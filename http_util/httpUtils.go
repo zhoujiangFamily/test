@@ -44,12 +44,15 @@ func RenderJson(w http.ResponseWriter, code int, data ...interface{}) error {
 	return encoder.Encode(data[0])
 }
 func Render(w http.ResponseWriter, code int, data ...interface{}) error {
-	err := RenderJson(w, code, data)
+
+	writeHeader(w, code, "application/json")
+	encoder := json.NewEncoder(w)
+	err := encoder.Encode(data[0])
 	if err != nil {
 		log.Printf("Render failed parse form: %v ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
-	return nil
+	return err
 }
 
 func writeHeader(w http.ResponseWriter, code int, contentType string) {

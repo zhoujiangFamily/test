@@ -334,14 +334,14 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 		LL:      vfvf,
 		FF:      1,
 	}
-	gps := model.Gps{
+	/*	gps := model.Gps{
 		UserId:        "dsa",
 		RouteId:       "213121",
 		TotalCalories: 12,
 		TotalTime:     22,
 		TotalLength:   66,
-	}
-	gps.Create()
+	}*/
+	//gps.Create()
 	http_util.Render(w, 200, data)
 }
 
