@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
+	"git.in.codoon.com/Overseas/runbox/first-test/conf"
+	"git.in.codoon.com/Overseas/runbox/first-test/http_util"
 	"git.in.codoon.com/Overseas/runbox/first-test/service"
 	"io"
 	"io/ioutil"
@@ -32,7 +34,7 @@ func main() {
 	log.Printf("runboxServer Listening on port %s ", port)
 
 	//serverName := "runboxServer"
-	//conf.InitBase()
+	conf.InitBase()
 
 	router := http.NewServeMux()
 
@@ -58,72 +60,95 @@ func midHandler(next http.Handler) http.Handler {
 		log.Printf("runboxServer Started[uid:%s] %s %s", user_id, r.Method, r.URL.Path)
 
 		//校验token开始
-
-		/*	err, uid := checkToken(token)
-			if err == nil && uid != "" {
-				if user_id != uid {
-					log.Printf("runboxServer check uid failed ")
-					w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-					http.Error(w, "check uid failed ", http_util.HTTP_CODE_AUTH_UID_FAILED)
-
-				}
-			} else {
-				//token 校验失败
-				log.Printf("runboxServer check token failed err: %v ", err)
-				w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-				http.Error(w, "check token failed ", http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
-
-			} //校验token结束*/
-
-		log.Printf("runboxServer Completed[uid:%s] %s in %v", user_id, r.URL.Path, time.Since(start))
-		//之后
-		//处理http
-		data, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Printf("read request body error:%v", err)
+		//checkUser(w, r)
+		/*	if e1 != nil {
 			return
-		}
+		}*/
+		//处理 http 相关
+		delHttpBody(w, r, user_id)
 
-		var v map[string]interface{}
-		if len(data) == 0 {
-			v = make(map[string]interface{})
-			err = nil
-		} else {
-			v, err = loadJson(bytes.NewReader(data))
-		}
-		if err != nil {
-			// if request data is NOT json format, restore body
-			// log.Printf("ReqData2Form parse as json failed. restore [%s] to body", string(data))
-			r.Body = ioutil.NopCloser(bytes.NewReader(data))
-		} else {
-			v["user_id"] = user_id
-			form := map2Form(v)
-			s := form.Encode()
-			if r.Method == "POST" || r.Method == "PUT" {
-				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-				r.Body = ioutil.NopCloser(strings.NewReader(s))
-			} else if r.Method == "GET" || r.Method == "DELETE" {
-				r.Header.Del("Content-Type")
-				urlValues := r.URL.Query()
-				for k, vv := range urlValues {
-					if _, ok := form[k]; !ok {
-						form[k] = vv
-					}
-				}
-				r.URL.RawQuery = form.Encode()
-
-			} else {
-				r.Body = ioutil.NopCloser(strings.NewReader(s))
-
-			}
-		}
-
+		//之后
 		next.ServeHTTP(w, r)
-
+		log.Printf("runboxServer Completed[uid:%s] %s in %v", user_id, r.URL.Path, time.Since(start))
 	})
-
 	return nil
 }
+func checkUser(w http.ResponseWriter, r *http.Request) error {
+	rsp := http_util.CommonRsp{
+		Status: http_util.SUCCESS,
+		Code:   http_util.CODE_SUCCESS,
+		Desc:   "",
+	}
+	token := r.Header.Get(TOKEN_ID)
+	user_id := r.Header.Get(UID)
+	err, uid := checkToken(token)
+	if err == nil && uid != "" {
+		if user_id != uid {
+			log.Printf("runboxServer check uid failed ")
+			w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
+			http.Error(w, "check uid failed ", http_util.HTTP_CODE_AUTH_UID_FAILED)
+			rsp.Desc = "runboxServer check uid failed"
+			rsp.Status = http_util.FAILED
+			http_util.Render(w, 200, rsp)
+			return errors.New("user failed")
+		}
+	} else {
+		//token 校验失败
+		log.Printf("runboxServer check token failed err: %v ", err)
+		w.WriteHeader(http_util.HTTP_CODE_AUTH_TOKEN_FAILED)
+		rsp.Desc = "check token failed"
+		rsp.Status = http_util.FAILED
+		http_util.Render(w, 200, rsp)
+		return errors.New("token failed")
+	} //校验token结束
+	return nil
+
+}
+
+func delHttpBody(w http.ResponseWriter, r *http.Request, user_id string) {
+	//处理http
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Printf("read request body error:%v", err)
+		return
+	}
+	log.Printf(" user: %s , body : %s ", user_id, string(data))
+
+	var v map[string]interface{}
+	if len(data) == 0 {
+		v = make(map[string]interface{})
+		err = nil
+	} else {
+		v, err = loadJson(bytes.NewReader(data))
+	}
+	if err != nil {
+		// if request data is NOT json format, restore body
+		// log.Printf("ReqData2Form parse as json failed. restore [%s] to body", string(data))
+		r.Body = ioutil.NopCloser(bytes.NewReader(data))
+	} else {
+		v["user_id"] = user_id
+		form := map2Form(v)
+		s := form.Encode()
+		if r.Method == "POST" || r.Method == "PUT" {
+			r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			r.Body = ioutil.NopCloser(strings.NewReader(s))
+		} else if r.Method == "GET" || r.Method == "DELETE" {
+			r.Header.Del("Content-Type")
+			urlValues := r.URL.Query()
+			for k, vv := range urlValues {
+				if _, ok := form[k]; !ok {
+					form[k] = vv
+				}
+			}
+			r.URL.RawQuery = form.Encode()
+
+		} else {
+			r.Body = ioutil.NopCloser(strings.NewReader(s))
+
+		}
+	}
+}
+
 func loadJson(r io.Reader) (map[string]interface{}, error) {
 	decoder := json.NewDecoder(r)
 	decoder.UseNumber()

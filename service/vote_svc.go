@@ -291,7 +291,7 @@ func TestGet(w http.ResponseWriter, r *http.Request) {
 	Rsp := http_util.CommonRsp{
 		Status: "failed",
 		Desc:   "",
-		Code:   200,
+		Code:   0,
 	}
 	booll := http_util.Bind(r, req)
 
@@ -352,7 +352,7 @@ func gpsget(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	req := &GetGpsReq{}
 	rsp := http_util.CommonRsp{
 		Status: http_util.SUCCESS,
-		Code:   http_util.HTTP_CODE_SUCCESS,
+		Code:   http_util.CODE_SUCCESS,
 		Desc:   "",
 	}
 	booll := http_util.Bind(r, req)
@@ -409,7 +409,7 @@ func GetGpsList(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	rsp := http_util.CommonRsp{
 		Status: http_util.SUCCESS,
-		Code:   http_util.HTTP_CODE_SUCCESS,
+		Code:   http_util.CODE_SUCCESS,
 		Desc:   "",
 	}
 
@@ -506,6 +506,9 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
-	rsp.Data = gps.RouteId
+	data1 := PostGpsRspData{
+		RouteId: routeId,
+	}
+	rsp.Data = data1
 	http_util.Render(w, 200, rsp)
 }
