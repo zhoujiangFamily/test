@@ -44,13 +44,13 @@ type GpsDto struct {
 }
 
 type GetGpsReq struct {
-	UserId  string `json:"user_id"`
-	RouteId string `json:"route_id"`
+	UserId  string `json:"user_id" form:"user_id"`
+	RouteId string `json:"route_id"form:"route_id"`
 }
 
 type TestReq struct {
-	UserId  string `json:"user_id"`
-	RouteId string `json:"route_id"`
+	UserId  string `json:"user_id" form:"user_id"`
+	RouteId string `json:"route_id" form:"route_id"`
 }
 
 type TestRsp struct {

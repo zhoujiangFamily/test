@@ -1,7 +1,8 @@
-package common
+package http_util
 
 import (
 	"encoding/json"
+	"git.in.codoon.com/Overseas/runbox/first-test/common"
 	"log"
 	"math"
 	"net/http"
@@ -17,6 +18,23 @@ const (
 	MIMEPOSTForm          = "application/x-www-form-urlencoded"
 	MIMEPOSTForm2B        = "application/x-www-form-urlencode" // be compatible with codoon Android. WTF!
 	MIMEMultipartPOSTForm = "multipart/form-data"
+)
+
+const (
+	HTTP_CODE_SUCCESS = 200
+
+	HTTP_CODE_PARAM_FAILE    = 601
+	HTTP_CODE_BUSINESS_FAILE = 602
+
+	//token 校验失败
+	HTTP_CODE_AUTH_TOKEN_FAILED = 701
+	//UID 与TOKEN中不一致
+	HTTP_CODE_AUTH_UID_FAILED = 702
+)
+
+const (
+	FAILED  = "failed"
+	SUCCESS = "success"
 )
 
 func RenderJson(w http.ResponseWriter, code int, data ...interface{}) error {
@@ -39,25 +57,25 @@ func writeHeader(w http.ResponseWriter, code int, contentType string) {
 }
 
 func Bind(c *http.Request, obj interface{}) bool {
-	var b Binding
-	/*	ctype := filterFlags(c.Header.Get("Content-Type"))
-		switch {
-		case c.Method == "GET" || c.Method == "DELETE" || ctype == MIMEPOSTForm || ctype == MIMEPOSTForm2B:
-			b = Form
-		case ctype == MIMEMultipartPOSTForm:
-			b = MultipartForm
-		case ctype == MIMEJSON:
-			b = JSON
-		case ctype == MIMEXML || ctype == MIMEXML2:
-			b = XML
-		default:
-			log.Printf("Render failed parse form:  ")
-			return false
-		}*/
-	b = JSON
+	var b common.Binding
+	ctype := filterFlags(c.Header.Get("Content-Type"))
+	switch {
+	case c.Method == "GET" || c.Method == "DELETE" || ctype == MIMEPOSTForm || ctype == MIMEPOSTForm2B:
+		b = common.Form
+	case ctype == MIMEMultipartPOSTForm:
+		b = common.MultipartForm
+	case ctype == MIMEJSON:
+		b = common.JSON
+	case ctype == MIMEXML || ctype == MIMEXML2:
+		b = common.XML
+	default:
+		log.Printf("Render failed parse form:  ")
+		return false
+	}
+	//b = JSON
 	return BindWith(c, obj, b)
 }
-func BindWith(c *http.Request, obj interface{}, b Binding) bool {
+func BindWith(c *http.Request, obj interface{}, b common.Binding) bool {
 	if err := b.Bind(c, obj); err != nil {
 		log.Printf("xaxsa %v", err)
 		return false
@@ -77,4 +95,5 @@ type CommonRsp struct {
 	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
 	Desc   string      `json:"description"`
+	Code   int         `json:"code"`
 }

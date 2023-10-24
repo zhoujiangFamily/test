@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
 	"git.in.codoon.com/Overseas/runbox/first-test/conf"
+	"git.in.codoon.com/Overseas/runbox/first-test/http_util"
 	"git.in.codoon.com/Overseas/runbox/first-test/model"
 	"html/template"
 	"log"
@@ -286,11 +287,16 @@ var indexHTML = `
 
 func TestGet(w http.ResponseWriter, r *http.Request) {
 	req := &GetGpsReq{}
-	booll := common.Bind(r, req)
+	Rsp := http_util.CommonRsp{
+		Status: "failed",
+		Desc:   "",
+		Code:   200,
+	}
+	booll := http_util.Bind(r, req)
 
 	if !booll {
-		log.Printf("bing request failed parse form: %v ", r)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		Rsp.Desc = "参数非法"
+		http_util.Render(w, 200, Rsp)
 		return
 	}
 	vfvf := make([]string, 0)
@@ -302,24 +308,13 @@ func TestGet(w http.ResponseWriter, r *http.Request) {
 		LL:      vfvf,
 		FF:      1,
 	}
-
-	common.Render(w, 200, data)
+	Rsp.Data = data
+	Rsp.Desc = "success"
+	http_util.Render(w, 200, Rsp)
 }
 func TestPost(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		log.Printf("saveVote: failed to parse form: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	team := r.FormValue("route_id")
-	if team == "" {
-		log.Printf("saveVote: \"team\" property missing from form submission")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 	req := &GetGpsReq{}
-	booll := common.Bind(r, req)
+	booll := http_util.Bind(r, req)
 
 	if !booll {
 		log.Printf("bing request failed parse form: %v  xxx %v  xxxx2: %v", r.Body, r.Form, r.PostForm)
@@ -334,12 +329,19 @@ func TestPost(w http.ResponseWriter, r *http.Request) {
 	vfvf = append(vfvf, "dsfds")
 	data := TestRsp{
 		UserId:  req.UserId,
-		RouteId: team,
+		RouteId: req.RouteId,
 		LL:      vfvf,
 		FF:      1,
 	}
-
-	common.Render(w, 200, data)
+	gps := model.Gps{
+		UserId:        "dsa",
+		RouteId:       "213121",
+		TotalCalories: 12,
+		TotalTime:     22,
+		TotalLength:   66,
+	}
+	gps.Create()
+	http_util.Render(w, 200, data)
 }
 
 //获取一条记录
@@ -347,11 +349,19 @@ func gpsget(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	///
 	req := &GetGpsReq{}
-	booll := common.Bind(r, req)
+	rsp := http_util.CommonRsp{
+		Status: http_util.SUCCESS,
+		Code:   http_util.HTTP_CODE_SUCCESS,
+		Desc:   "",
+	}
+	booll := http_util.Bind(r, req)
 
 	if !booll {
 		log.Printf("bing request failed parse form: %v ", r)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		rsp.Desc = "param get failed "
+		rsp.Status = http_util.FAILED
+		rsp.Code = http_util.HTTP_CODE_BUSINESS_FAILE
+		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
 	//根据route_id 和 获取路线
@@ -360,11 +370,14 @@ func gpsget(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	err := data.Select(req.RouteId)
 	if err != nil {
 		log.Printf("gpsGet: failed req : %v", req)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		rsp.Desc = "get gps data failed"
+		rsp.Status = http_util.FAILED
+		rsp.Code = http_util.HTTP_CODE_BUSINESS_FAILE
+		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
-	//fmt.Fprintf(w, "hello Go Web get")
-	common.Render(w, 200, data)
+	rsp.Data = data
+	http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 }
 
 //获取一条记录
@@ -372,7 +385,7 @@ func GetGpsList(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	///
 	req := &GetGpsReq{}
-	booll := common.Bind(r, req)
+	booll := http_util.Bind(r, req)
 
 	if !booll {
 		log.Printf("bing request failed parse form: %v ", r)
@@ -389,34 +402,38 @@ func GetGpsList(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	//fmt.Fprintf(w, "hello Go Web get")
-	common.Render(w, 200, data)
+	http_util.Render(w, 200, data)
 }
 
 func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-
-	if err := r.ParseForm(); err != nil {
-		log.Printf("gpsPost: failed to parse form: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+	rsp := http_util.CommonRsp{
+		Status: http_util.SUCCESS,
+		Code:   http_util.HTTP_CODE_SUCCESS,
+		Desc:   "",
 	}
 
-	//
 	userId := common.GetUserId(r)
 
 	if userId == "" {
 		log.Printf("gpsPost: userId is empty ")
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		rsp.Desc = "userId is empty"
+		rsp.Status = http_util.FAILED
+		rsp.Code = http_util.HTTP_CODE_PARAM_FAILE
+		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
 
 	gpsDto := &GpsDto{
 		UserId: userId,
 	}
-	booll := common.Bind(r, gpsDto)
+	booll := http_util.Bind(r, gpsDto)
 
 	if !booll {
 		log.Printf("bing request failed parse form: %v ", r)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		rsp.Desc = "bing request param failed"
+		rsp.Status = http_util.FAILED
+		rsp.Code = http_util.HTTP_CODE_PARAM_FAILE
+		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
 
@@ -473,11 +490,12 @@ func gpsPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	err := gps.Create()
 
 	if err != nil {
-		log.Printf("gpsPost: failed to parse form: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Printf("gpsPost: create gps failed: %v", err)
+		rsp.Desc = " create gps failed"
+		rsp.Status = http_util.FAILED
+		rsp.Code = http_util.HTTP_CODE_BUSINESS_FAILE
+		http_util.Render(w, http_util.HTTP_CODE_SUCCESS, rsp)
 		return
 	}
-
-	//fmt.Fprintf(w, "hello Go Web Post")
-	common.Render(w, 200, gps.RouteId)
+	http_util.Render(w, 200, gps.RouteId)
 }
