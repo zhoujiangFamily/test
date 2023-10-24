@@ -97,7 +97,7 @@ func (g *Gps) Update() error {
 
 func (g *Gps) Select(routeId string) error {
 
-	insertStmt, err := conf.Fb_mysql.Prepare("select id,route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url from gps_route_data where route_id = :1")
+	insertStmt, err := conf.Fb_mysql.Prepare("select id,route_id,user_id,total_length,total_time,total_calories,location,sports_type,start_time, EndTime,upload_time,locus_url,locus_url2,steps,file_url from gps_route_data where route_id = ?")
 	if err != nil {
 		log.Printf("Select Gps select error :%v", err)
 	}
