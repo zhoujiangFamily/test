@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
-	"git.in.codoon.com/Overseas/runbox/first-test/conf"
 	"git.in.codoon.com/Overseas/runbox/first-test/http_util"
 	"git.in.codoon.com/Overseas/runbox/first-test/service"
 	"io"
@@ -34,7 +33,7 @@ func main() {
 	log.Printf("runboxServer Listening on port %s ", port)
 
 	//serverName := "runboxServer"
-	conf.InitBase()
+	//conf.InitBase()
 
 	router := http.NewServeMux()
 
