@@ -1,5 +1,23 @@
 package service
 
+import "strconv"
+
+type BaseArgs struct {
+	UserId    int64  `json:"user_id"  form:"user_id"`
+	UserAgent string `json:"user_agent" form:"user_agent"`
+}
+
+func (b *BaseArgs) SetUserId(userId string) {
+	id, err := strconv.ParseInt(userId, 10, 64)
+	if nil == err {
+		b.UserId = id
+	}
+}
+
+func (b *BaseArgs) SetUserAgent(agent string) {
+	b.UserAgent = agent
+}
+
 type GpsDto struct {
 	RouteId           int64   `json:"route_id" form:"route_id"`
 	UserId            string  `json:"user_id" form:"user_id"`

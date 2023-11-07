@@ -9,7 +9,9 @@ import (
 	"git.in.codoon.com/Overseas/runbox/first-test/common"
 	"git.in.codoon.com/Overseas/runbox/first-test/conf"
 	"git.in.codoon.com/Overseas/runbox/first-test/http_util"
+	"git.in.codoon.com/Overseas/runbox/first-test/router"
 	"git.in.codoon.com/Overseas/runbox/first-test/service"
+	"github.com/gin-gonic/gin"
 	"io"
 	"io/ioutil"
 	"log"
@@ -47,6 +49,22 @@ func main() {
 	}
 }
 
+func main_1() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	//初始化配置
+	conf.InitBase()
+	engine := gin.New()
+	engine.Use(http_util.TakeToken())
+	engine.Use(http_util.ReqData2Form())
+	router.Router(engine)
+	log.Printf("runboxServer Listening on port %s ", port)
+	engine.Run(port)
+
+}
+
 func midHandler(next http.Handler) http.Handler {
 	//获取token：
 
@@ -60,10 +78,10 @@ func midHandler(next http.Handler) http.Handler {
 		log.Printf("runboxServer Started[uid:%s] %s %s", user_id, r.Method, r.URL.Path)
 
 		//校验token开始
-		//checkUser(w, r)
-		/*	if e1 != nil {
-			return
-		}*/
+		checkUser(w, r)
+		/*		if e1 != nil {
+				return
+			}*/
 		//处理 http 相关
 		delHttpBody(w, r, user_id)
 
