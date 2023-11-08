@@ -50,6 +50,7 @@ type Gps struct {
 
 	GPSType int64  `json:"gps_type"`
 	FileUrl string `json:"file_url"`
+	Md5     string `json:"md_5"`
 }
 
 func (g *Gps) Create() error {

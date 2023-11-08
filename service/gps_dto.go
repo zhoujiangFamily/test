@@ -59,6 +59,7 @@ type GpsDto struct {
 	GPSType           int64   `json:"gps_type" form:"gps_type"`
 	//RUNBOX  存储数据文件路径
 	FileUrl string `json:"file_url" form:"file_url"`
+	Md5     string `json:"md5"form:"md5" `
 }
 
 type GetGpsReq struct {
